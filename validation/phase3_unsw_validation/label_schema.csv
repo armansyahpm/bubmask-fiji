@@ -1,0 +1,9 @@
+label,definition
+bubble_valid,Sharp measurable bubble; include in bubble-size validation.
+bubble_blurred_ignore,Likely bubble but too blurred for reliable sizing.
+nonbubble_artifact,"Cloud, stain, dirt, optical shadow, or false texture."
+bubble_border_partial,Bubble touches image or field-of-view border.
+bubble_overlap_reconstruct,Bubble needs circle/ellipse reconstruction.
+saturated_highlight,Bright glare/highlight region that should be flagged.
+particle,Solid particle; not a bubble and not included in bubble-size histogram.
+bubble_particle_overlap_review,Bubble and particle overlap or touch; requires review.

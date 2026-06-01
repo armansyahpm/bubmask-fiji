@@ -1,0 +1,1 @@
+annotation_id,image_id,label,object_type,x_px,y_px,width_px,height_px,mask_path,mask_format,has_box,has_mask,diameter_px_manual,diameter_mm_manual,annotator,reviewer,confidence,notes

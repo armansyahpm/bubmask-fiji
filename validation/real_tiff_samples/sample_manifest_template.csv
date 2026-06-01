@@ -1,0 +1,2 @@
+image_id,relative_path,acquisition_date,pressure,vent_geometry,nominal_size,flow_rate,pixel_width,pixel_height,unit,bit_depth,tiff_type,has_hand_mask,hand_mask_path,notes
+unsw_bubble_example_001,validation/real_tiff_samples/unsw_bubble_example_001.ome.tif,2026-05-12,3atm,4vent,1.5mm,0.5lpm,0.0,0.0,um,16,OME-TIFF,false,,replace_this_row_with_real_metadata

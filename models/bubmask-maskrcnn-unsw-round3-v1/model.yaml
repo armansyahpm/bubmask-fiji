@@ -1,0 +1,35 @@
+name: bubmask-maskrcnn-unsw-round3-v1
+display_name: BubMask Mask R-CNN UNSW Round 3 v1
+model_type: Matterport Mask R-CNN
+framework: TensorFlow/Keras
+base_model_package: models/bubmask-maskrcnn-unsw-round2-v1
+weights: weights/mask_rcnn_bubble.h5
+status: provisional_cpu_finetune
+created: 2026-05-28
+institution: UNSW School of Mining and Mineral Engineering
+purpose: Microbubble instance segmentation for Fiji/ImageJ bubble size measurement.
+training:
+  source_zip: C:/Users/arman/Downloads/microbubble_size_measurement2.coco-segmentation.zip
+  source_dataset: validation/phase3_unsw_validation/roboflow_coco_round3_human350_training_clean_fast
+  validation_dataset: validation/phase3_unsw_validation/roboflow_coco_round3_human350_local_split
+  base_weights: models/bubmask-maskrcnn-unsw-round2-v1/weights/mask_rcnn_bubble.h5
+  run_directory: training_runs/roboflow_round3_human350_heads3/bubble_unsw_conservative20260528T0420
+  selected_checkpoint: mask_rcnn_bubble_unsw_conservative_0003.h5
+  epochs: 3
+  steps_per_epoch: 245
+  validation_steps: 52
+  augmentation: true
+  final_loss: 1.4836
+  final_val_loss: 1.4288
+dataset:
+  images_total: 350
+  annotations_total_raw: 34258
+  train_images: 245
+  valid_images: 52
+  test_images: 53
+  kept_annotations_after_cleaning: 34249
+  removed_annotations_after_cleaning: 9
+notes:
+  - This model is the best validation-loss checkpoint from the local CPU Round 3 run.
+  - It uses 350 human-corrected COCO segmentation images exported from Roboflow.
+  - It is Fiji-ready as a model package, but should still be treated as provisional until visual review and held-out COCO validation are complete.

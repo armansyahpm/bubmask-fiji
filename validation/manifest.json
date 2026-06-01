@@ -1,0 +1,30 @@
+{
+  "schema_version": "bubmask.validation_manifest.v1",
+  "dataset_name": "UNSW BubMask validation scaffold",
+  "created": "2026-04-28",
+  "raw_dir": "raw",
+  "real_tiff_sample_dir": "real_tiff_samples",
+  "real_tiff_sample_manifest_template": "real_tiff_samples/sample_manifest_template.csv",
+  "hand_mask_dir": "hand_masks",
+  "expected_measurements": "expected/expected_measurements.csv",
+  "calibration_policy": "Use image metadata where available; otherwise reject image unless pixel size is supplied explicitly.",
+  "acceptance": {
+    "diameter_eq_relative_error_max": 0.05,
+    "area_relative_error_max": 0.10,
+    "minimum_confidence_default": 0.50
+  },
+  "fixtures": [
+    {
+      "image_id": "synthetic_microbubble_001",
+      "raw": "raw/synthetic_microbubble_001.pgm",
+      "hand_mask": "hand_masks/synthetic_microbubble_001_mask.pgm",
+      "description": "16x16 ASCII PGM with a 4x4 square bubble mask for pipeline smoke tests."
+    }
+  ],
+  "notes": [
+    "Use real_tiff_samples for a small local intake set of roughly 10 representative real microscope TIFF images.",
+    "Real intake TIFF files are ignored by git; record metadata in a manifest before using them for plugin decisions.",
+    "Replace scaffold entries with real UNSW microbubble validation images and hand masks.",
+    "Keep raw research data access-controlled if required by project governance."
+  ]
+}

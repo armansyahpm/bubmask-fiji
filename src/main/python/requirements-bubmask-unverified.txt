@@ -1,0 +1,16 @@
+# Initial BubMask runtime requirements.
+#
+# These are the packages imported by the copied BubMask/Matterport runtime.
+# The first successful import test used the pinned versions recorded in
+# requirements-bubmask-lock.txt. Full model loading and inference still need to
+# be validated.
+
+tensorflow==2.10.1
+keras==2.10.0
+numpy==1.23.5
+opencv-python==4.7.0.72
+scikit-image==0.19.3
+imgaug==0.4.0
+matplotlib==3.7.5
+Pillow
+IPython==8.37.0

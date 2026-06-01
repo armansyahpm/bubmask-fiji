@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>42.0.0</version>
+		<relativePath />
+	</parent>
+
+	<groupId>edu.unsw.mining</groupId>
+	<artifactId>bubmask-fiji</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+
+	<name>BubMask Fiji</name>
+	<description>Fiji/ImageJ integration for BubMask microbubble sizing.</description>
+	<url>https://www.unsw.edu.au/engineering/our-schools/minerals-and-energy-resources-engineering</url>
+	<inceptionYear>2026</inceptionYear>
+
+	<organization>
+		<name>UNSW School of Mining and Mineral Engineering</name>
+		<url>https://www.unsw.edu.au/</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>Project license pending UNSW approval</name>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<properties>
+		<main-class>edu.unsw.mining.bubmask.BubMaskCommand</main-class>
+		<package-name>edu.unsw.mining.bubmask</package-name>
+		<license.skip>true</license.skip>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
+		</repository>
+	</repositories>
+</project>

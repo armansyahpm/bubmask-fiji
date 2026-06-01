@@ -1,0 +1,33 @@
+schema_version: bubmask.model_package.v1
+name: bubmask-maskrcnn-v1
+display_name: BubMask Mask R-CNN v1
+task: microbubble_instance_segmentation
+framework:
+  family: keras_tensorflow
+  architecture: matterport_mask_rcnn
+  backbone: resnet101
+  feature_pyramid_network: true
+weights:
+  path: weights/mask_rcnn_bubble.h5
+  sha256: C33BD33D4B97DD54B4B8E6C916B1A5114FC06A88AC4A989EA89ACAF6650E95F3
+input:
+  preferred_format: tif
+  accepted_formats:
+    - tif
+    - tiff
+    - ome.tif
+    - ome.tiff
+  color_policy: grayscale_or_convertible
+  calibration_required_for_physical_units: true
+output:
+  masks: instance_masks
+  measurements:
+    - area_px
+    - equivalent_diameter_px
+    - equivalent_diameter_calibrated
+    - centroid_px
+    - confidence_score
+known_limitations:
+  - Runtime dependencies are not yet pinned in this package.
+  - Fiji worker integration currently returns placeholder output until real inference is wired.
+  - Validation on UNSW real TIFF images is pending.

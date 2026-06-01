@@ -1,0 +1,24 @@
+{
+  "calibration_status": "assumed",
+  "counts_by_group": {
+    "with_particle::bubble_3atm_4vent_1-5mm_0-3lpm_withparticle0-5": 500,
+    "with_particle::bubble_3atm_4vent_1-5mm_0-3lpm_withparticle1-0": 500,
+    "without_particle::bubble_3atm_4vent_1-5mm_0-3lpm": 501,
+    "without_particle::bubble_3atm_4vent_1-5mm_0-5lpm": 509,
+    "without_particle::bubble_3atm_4vent_1-5mm_0-7lpm": 510
+  },
+  "estimated_first_pass_annotations": 250,
+  "ground_truth_policy": "Model proposals are not ground truth; boxes and masks require human confirmation.",
+  "px_per_mm_assumption": 183.0,
+  "schema_version": "bubmask.phase3_validation_summary.v1",
+  "selected_annotation_images": 50,
+  "selected_counts_by_group": {
+    "with_particle::bubble_3atm_4vent_1-5mm_0-3lpm_withparticle0-5": 10,
+    "with_particle::bubble_3atm_4vent_1-5mm_0-3lpm_withparticle1-0": 10,
+    "without_particle::bubble_3atm_4vent_1-5mm_0-3lpm": 10,
+    "without_particle::bubble_3atm_4vent_1-5mm_0-5lpm": 10,
+    "without_particle::bubble_3atm_4vent_1-5mm_0-7lpm": 10
+  },
+  "target_objects_per_selected_image": 5,
+  "total_images": 2520
+}

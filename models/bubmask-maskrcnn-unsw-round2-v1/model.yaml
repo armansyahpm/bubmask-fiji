@@ -3,7 +3,11 @@ display_name: BubMask Mask R-CNN UNSW Round 2 v1
 model_type: Matterport Mask R-CNN
 framework: TensorFlow/Keras
 base_model_package: models/bubmask-maskrcnn-v1
-weights: weights/mask_rcnn_bubble.h5
+weights:
+  path: weights/mask_rcnn_bubble.h5
+  sha256: 1F2DBD4F042286CA8208896C2579E364846C5F3448B22AD471E13A8E08714ADC
+  release_tag: v0.1.0
+  release_asset: bubmask-maskrcnn-unsw-round2-v1_mask_rcnn_bubble.h5
 status: provisional_cpu_finetune
 created: 2026-05-24
 institution: UNSW School of Mining and Mineral Engineering

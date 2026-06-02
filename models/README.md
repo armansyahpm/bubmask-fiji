@@ -15,6 +15,9 @@ required local file at:
 models/<model-package>/weights/mask_rcnn_bubble.h5
 ```
 
+For release `v0.1.0`, only UNSW Round 2 and UNSW Round 3 weights are distributed
+as GitHub Release assets. Original BubMask weights are not distributed.
+
 Before public scientific claims, check the validation report in:
 
 ```text

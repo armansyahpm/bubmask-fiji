@@ -75,7 +75,36 @@ git clone https://github.com/armansyahpm/bubmask-fiji.git
 The extracted or cloned folder is called the BubMask-Fiji project folder in this
 guide.
 
-### Install the Fiji Script
+### Recommended Windows Installer
+
+From PowerShell in the downloaded `bubmask-fiji` folder:
+
+```powershell
+.\install_bubmask_fiji.ps1 -FijiPath "C:\path\to\Fiji"
+```
+
+If PowerShell blocks script execution, run this once in the same terminal and
+then rerun the installer:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+The installer:
+
+1. copies `BubMask.py` into Fiji;
+2. sets `BUBMASK_FIJI_PROJECT`;
+3. creates `.venv-bubmask`;
+4. installs Python requirements;
+5. downloads UNSW Round 2 and UNSW Round 3 weights from the GitHub `v0.1.0`
+   release;
+6. verifies model SHA256 checksums.
+
+Original BubMask weights are not distributed by this public release.
+
+Restart Fiji after installation.
+
+### Manual Fiji Script Install
 
 Copy:
 
@@ -131,18 +160,19 @@ py -3.10 -m venv .venv-bubmask
 
 The current Mask R-CNN/TensorFlow stack was tested on Windows with Python 3.10.
 
-### Add Model Weights
+### Add Model Weights Manually
 
-The public GitHub repository includes model metadata but not the large `.h5`
-Mask R-CNN weight files. Place the required weights in:
+The installer downloads model weights automatically. For manual installation,
+download only the UNSW Round 2 and UNSW Round 3 `.h5` files from the GitHub
+`v0.1.0` release and place them in:
 
 ```text
-bubmask-fiji/models/<model-package>/weights/mask_rcnn_bubble.h5
+bubmask-fiji/models/bubmask-maskrcnn-unsw-round2-v1/weights/mask_rcnn_bubble.h5
+bubmask-fiji/models/bubmask-maskrcnn-unsw-round3-v1/weights/mask_rcnn_bubble.h5
 ```
 
 Without model weights, the Fiji command can open but Mask R-CNN inference cannot
-complete. Model weights should be distributed separately as release assets,
-institutional files, or a model package.
+complete. Original BubMask weights are not distributed in the public release.
 
 ---
 
@@ -178,13 +208,15 @@ The prototype supports:
 
 | Model | Purpose |
 | --- | --- |
-| Original BubMask | Baseline model from the original BubMask workflow |
+| Original BubMask | Baseline metadata only; original weights are not distributed in the public release |
 | UNSW Round 2 | Current strongest held-out validation performance in this project |
-| UNSW Round 3 | Provisional fine-tune for side-by-side testing |
+| UNSW Round 3 | Current Fiji UI default and provisional fine-tune for side-by-side testing |
 
 Important scientific note: Round 3 is installed for comparison, but the
 held-out validation/test results showed Round 2 was stronger on the available
 COCO masks. Do not claim Round 3 is more accurate without further validation.
+The current interface still defaults to Round 3 because that is the workflow
+used in the latest Fiji testing.
 
 ### Confidence Threshold
 
@@ -424,8 +456,8 @@ Manager, then press the manual-add button and refresh the mask overlay.
 
 ## 11. Current Prototype Limits
 
-- Model weights are not included in the public GitHub source release because
-  they are large binary files.
+- Model weights are not committed to git because they are large binary files;
+  UNSW Round 2 and Round 3 weights are distributed as release assets.
 - Round 3 is provisional and should not be treated as the best scientific
   model.
 - Inter-user repeatability of manual correction still needs formal testing.

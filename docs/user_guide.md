@@ -157,9 +157,20 @@ institutional files, or a model package.
 The tool writes a temporary run folder while processing. Final output files are
 only retained after the user confirms the export choices at the end.
 
+You can also launch BubMask from Fiji Quick Search by typing `bub` and choosing
+the BubMask command.
+
+![Fiji Quick Search showing the BubMask command under Plugins > UNSW > BubMask.](figures/user_guide/fig_01_plugins_menu_bubmask.png)
+
 ---
 
 ## 4. Main Settings
+
+The first BubMask window is intentionally compact. Routine users normally only
+need to confirm the detection method, model package, confidence threshold, and
+calibration.
+
+![BubMask Bubble Analyzer settings window showing model choice, confidence threshold, calibration, More options, NEXT/OK, and CANCEL.](figures/user_guide/fig_02_settings_basic_options.png)
 
 ### Model Package
 
@@ -188,6 +199,18 @@ to edit them. These settings include preprocessing profile, background
 correction, quality gates, and preview behaviour. Use them only when testing a
 specific image-processing condition.
 
+### Main Buttons
+
+| Button | What it does |
+| --- | --- |
+| `BACK` | Return to the previous step when available |
+| `More options` | Expand advanced preprocessing and quality settings |
+| `NEXT` or `NEXT/OK` | Continue to the next processing step |
+| `OK` | Apply or refresh the current tab/settings |
+| `CHANGE MODEL` | Return to model selection and rerun with another model |
+| `FINISH PROCESSING` | Stop editing and move to final output-file selection |
+| `CANCEL` | Cancel the current workflow |
+
 ---
 
 ## 5. Reviewing the Overlay
@@ -210,6 +233,22 @@ bubbles that need review or have quality warnings. All bubbles are treated as
 ordinary bubbles in the final measurement table; manual bubbles are not reported
 as a separate scientific class.
 
+The review stage uses two windows: the image window is where Fiji ROIs are drawn,
+and the BubMask review window is where the user adds ROIs, refreshes overlays,
+checks tables, and moves to histogram/export.
+
+![BubMask overlay review image and Review and Analysis window with Manual Bubbles, Histogram, Bubble Table, Statistics, Run Summary, and Log tabs.](figures/user_guide/fig_03_running_and_overlay_review.png)
+
+The usual navigation is:
+
+1. Inspect the overlay image.
+2. If masks are acceptable, press `NEXT` to move to histogram analysis.
+3. If bubbles are missing, draw Fiji ROIs in the overlay image and add them in
+   the Manual Bubbles tab.
+4. Use `CHANGE MODEL` only if you want to rerun the image with another model.
+5. Use `FINISH PROCESSING` only after manual correction and histogram settings
+   are complete.
+
 ---
 
 ## 6. Adding Missed Bubbles Manually
@@ -229,6 +268,20 @@ bubbles.
 
 If a bubble was added incorrectly, use the delete/remove option in the manual
 bubbles table, then refresh the overlay again.
+
+The screenshot below shows five manually added bubbles. The image overlay has
+been refreshed, and the measurement table has appended the new bubbles as normal
+`bubble` rows.
+
+![Manual bubble workflow showing added ROI bubbles, refreshed overlay, and appended bubble rows.](figures/user_guide/fig_04_manual_bubble_review.png)
+
+Video demonstration:
+
+[Open the manual bubble workflow video.](figures/user_guide/manual_bubble_workflow.mp4)
+
+In the video workflow, the user draws ROIs in the Fiji overlay image, adds the
+current ROI or ROI Manager ROIs in the BubMask window, then refreshes the mask
+overlay before continuing.
 
 ---
 
@@ -252,6 +305,36 @@ When changing histogram settings, press `OK` to refresh the graph. Use `BACK`
 to return to manual bubble editing or model selection. Use `FINISH PROCESSING`
 only when the masks, measurements, and histogram settings are ready for export.
 
+![Histogram tab showing the diameter distribution preview and the right-hand settings panel.](figures/user_guide/fig_05_histogram_tab_overview.png)
+
+The histogram tab is interactive:
+
+1. Choose what the y-axis represents using `Histogram by`.
+2. Set the number of bins.
+3. Enter x-axis limits if you want to zoom into a diameter range; leave limits
+   at `0.0` to let BubMask choose automatically.
+4. Toggle `PDF`, `CDF`, `D32 / Sauter mean`, `Mean diameter`, and `D23 marker`
+   as needed.
+5. Press `OK` to redraw the histogram with the new settings.
+
+![Histogram by dropdown for choosing the plotted quantity.](figures/user_guide/fig_06_histogram_by_dropdown.png)
+
+![Histogram y-axis options.](figures/user_guide/fig_07_histogram_y_axis_options.png)
+
+![Histogram settings after refresh, with updated graph controls.](figures/user_guide/fig_08_histogram_settings_refresh.png)
+
+The `Statistics` tab provides numerical summary metrics such as count, mean,
+median, percentiles, Sauter mean diameter, volume mean, minimum, and maximum.
+
+![Statistics tab showing count, mean, median, percentiles, D32/Sauter mean, volume mean, minimum, and maximum.](figures/user_guide/fig_09_statistics_tab.png)
+
+The `Run Summary` tab records the image, run folder, model, preprocessing,
+calibration, worker status, and how many bubbles/manual bubbles were included.
+Local paths shown in the screenshots are examples; on another computer they
+will point to that user's Fiji and BubMask-Fiji folders.
+
+![Run Summary tab showing source image, model, calibration, detection count, and manual-bubble count.](figures/user_guide/fig_10_run_summary_tab.png)
+
 ---
 
 ## 8. Exporting Results
@@ -269,6 +352,15 @@ scientific output package focuses on:
 
 The user chooses the output folder. If the user chooses not to save outputs,
 temporary files should be removed after the run.
+
+After `FINISH PROCESSING`, BubMask asks whether to save the recommended output
+package, choose individual files, or save no files.
+
+![BubMask Result Files dialog showing recommended package, choose output files, and do not save files options.](figures/user_guide/fig_11_output_files_tab.png)
+
+The final results window lists the retained files and their run-folder paths.
+
+![BubMask Results window showing retained output files and paths.](figures/user_guide/fig_12_finish_output_selection.png)
 
 ---
 

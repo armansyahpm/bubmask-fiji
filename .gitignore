@@ -7,6 +7,7 @@ target/
 .venv-bubmask/
 __pycache__/
 *.pyc
+/user_guide/
 
 # Local/generated runtime artifacts
 artifacts/*

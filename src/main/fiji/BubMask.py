@@ -1,15 +1,15 @@
 import csv
 import math
 
-from ij import IJ
+from ij import IJ, Prefs
 from ij import ImagePlus
 from ij.measure import ResultsTable
-from ij.io import FileInfo
+from ij.io import DirectoryChooser, FileInfo
 from ij.gui import Overlay, Roi, TextRoi
 from java.io import File, FileWriter, BufferedReader, InputStreamReader
 from java.awt import BorderLayout, Color, Font, GridBagConstraints, GridBagLayout, Insets
 from java.awt.event import ActionListener
-from java.lang import ProcessBuilder, Thread
+from java.lang import ProcessBuilder, Thread, System as JavaSystem
 from java.text import SimpleDateFormat
 from java.util import Date
 from ij.plugin.frame import RoiManager
@@ -19,14 +19,83 @@ from javax.swing.table import DefaultTableModel
 from org.json import JSONObject
 from fiji.util.gui import GenericDialogPlus
 
+DEFAULT_BUBMASK_PROJECT = "C:\\Users\\arman\\tor_mere\\bubmask-fiji"
+PROJECT_PREF_KEY = "bubmask.project.path"
 
-BUBMASK_PROJECT = "C:\\Users\\arman\\tor_mere\\bubmask-fiji"
-BUBMASK_PYTHON = BUBMASK_PROJECT + "\\.venv-bubmask\\Scripts\\python.exe"
-BUBMASK_WORKER = BUBMASK_PROJECT + "\\src\\main\\python\\bubmask_worker.py"
-BUBMASK_MODEL = BUBMASK_PROJECT + "\\models\\bubmask-maskrcnn-v1"
-BUBMASK_MODEL_UNSW_ROUND2 = BUBMASK_PROJECT + "\\models\\bubmask-maskrcnn-unsw-round2-v1"
-BUBMASK_MODEL_UNSW_ROUND3 = "C:\\Users\\arman\\Downloads\\fiji-latest-win64-jdk\\Fiji\\models\\bubmask-maskrcnn-unsw-round3-v1"
-BUBMASK_RESULTS_DIR = BUBMASK_PROJECT + "\\results"
+
+def clean_path(path):
+    if path is None:
+        return ""
+    value = str(path).strip().strip('"')
+    while value.endswith("\\") or value.endswith("/"):
+        value = value[:-1]
+    return value
+
+
+def join_path(root, *parts):
+    file_obj = File(root)
+    for part in parts:
+        file_obj = File(file_obj, part)
+    return file_obj.getPath()
+
+
+def project_has_worker(project_path):
+    if project_path is None or str(project_path).strip() == "":
+        return False
+    return File(join_path(project_path, "src", "main", "python", "bubmask_worker.py")).exists()
+
+
+def discover_bubmask_project():
+    candidates = [
+        JavaSystem.getenv("BUBMASK_FIJI_PROJECT"),
+        Prefs.get(PROJECT_PREF_KEY, ""),
+        DEFAULT_BUBMASK_PROJECT,
+    ]
+    for candidate in candidates:
+        project_path = clean_path(candidate)
+        if project_has_worker(project_path):
+            Prefs.set(PROJECT_PREF_KEY, project_path)
+            Prefs.savePreferences()
+            return project_path
+
+    IJ.showMessage(
+        "BubMask setup",
+        "Select the downloaded bubmask-fiji project folder.\n\n"
+        "It should contain src/main/python/bubmask_worker.py and the models folder."
+    )
+    chooser = DirectoryChooser("Select downloaded bubmask-fiji project folder")
+    selected = clean_path(chooser.getDirectory())
+    if project_has_worker(selected):
+        Prefs.set(PROJECT_PREF_KEY, selected)
+        Prefs.savePreferences()
+        return selected
+
+    IJ.showMessage(
+        "BubMask setup",
+        "BubMask-Fiji project folder was not configured.\n\n"
+        "Set BUBMASK_FIJI_PROJECT or rerun BubMask and select the folder that contains "
+        "src/main/python/bubmask_worker.py."
+    )
+    return selected
+
+
+def discover_python(project_path):
+    windows_python = join_path(project_path, ".venv-bubmask", "Scripts", "python.exe")
+    unix_python = join_path(project_path, ".venv-bubmask", "bin", "python")
+    if File(windows_python).exists():
+        return windows_python
+    if File(unix_python).exists():
+        return unix_python
+    return windows_python
+
+
+BUBMASK_PROJECT = discover_bubmask_project()
+BUBMASK_PYTHON = discover_python(BUBMASK_PROJECT)
+BUBMASK_WORKER = join_path(BUBMASK_PROJECT, "src", "main", "python", "bubmask_worker.py")
+BUBMASK_MODEL = join_path(BUBMASK_PROJECT, "models", "bubmask-maskrcnn-v1")
+BUBMASK_MODEL_UNSW_ROUND2 = join_path(BUBMASK_PROJECT, "models", "bubmask-maskrcnn-unsw-round2-v1")
+BUBMASK_MODEL_UNSW_ROUND3 = join_path(BUBMASK_PROJECT, "models", "bubmask-maskrcnn-unsw-round3-v1")
+BUBMASK_RESULTS_DIR = join_path(BUBMASK_PROJECT, "results")
 BUBMASK_MODEL_CHOICES = [
     "Original BubMask Mask R-CNN",
     "UNSW Round 2 fine-tune (provisional)",

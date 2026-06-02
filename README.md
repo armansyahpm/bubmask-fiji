@@ -68,19 +68,59 @@ it.
 
 ## Suggested Fiji test
 
-1. Open Fiji from:
+1. Download the repository:
+
+```bash
+git clone https://github.com/armansyahpm/bubmask-fiji.git
+```
+
+or use GitHub `Code > Download ZIP`.
+
+2. Copy the Fiji script:
+
+```text
+bubmask-fiji/src/main/fiji/BubMask.py
+```
+
+to:
+
+```text
+Fiji/scripts/Plugins/UNSW/BubMask.py
+```
+
+3. Restart Fiji. On first run, BubMask asks for the downloaded `bubmask-fiji`
+   project folder if `BUBMASK_FIJI_PROJECT` has not already been set.
+
+4. Create the local Python environment from the repository root:
+
+```powershell
+py -3.10 -m venv .venv-bubmask
+.\.venv-bubmask\Scripts\python.exe -m pip install --upgrade pip setuptools wheel
+.\.venv-bubmask\Scripts\python.exe -m pip install -r src\main\python\requirements-bubmask-lock.txt
+```
+
+5. Add model weights locally:
+
+```text
+models/<model-package>/weights/mask_rcnn_bubble.h5
+```
+
+The public GitHub source release contains code and metadata. Large `.h5` model
+weights must be distributed separately.
+
+6. Open Fiji from:
 
 ```text
 C:\Users\arman\Downloads\fiji-latest-win64-jdk\Fiji
 ```
 
-2. Open a representative TIFF image.
-3. Run `Plugins > UNSW > BubMask`.
-4. Choose model/calibration settings.
-5. Review the overlay image, optionally draw Fiji ROIs for missed bubbles, and
+7. Open a representative TIFF image.
+8. Run `Plugins > UNSW > BubMask`.
+9. Choose model/calibration settings.
+10. Review the overlay image, optionally draw Fiji ROIs for missed bubbles, and
    add them from the review window.
-6. Change histogram settings and press `OK` to verify the graph refreshes.
-7. Press `FINISH PROCESSING`, then select the output files to keep.
+11. Change histogram settings and press `OK` to verify the graph refreshes.
+12. Press `FINISH PROCESSING`, then select the output files to keep.
 
 ## Production direction
 

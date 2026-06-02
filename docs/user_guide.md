@@ -55,7 +55,98 @@ window.
 
 ---
 
-## 2. Starting BubMask
+## 2. Downloading from GitHub and Installing in Fiji
+
+Public users can download the source release from GitHub:
+
+```text
+https://github.com/armansyahpm/bubmask-fiji
+```
+
+There are two common download options:
+
+1. Use GitHub `Code > Download ZIP`, then extract the folder.
+2. Use git:
+
+```powershell
+git clone https://github.com/armansyahpm/bubmask-fiji.git
+```
+
+The extracted or cloned folder is called the BubMask-Fiji project folder in this
+guide.
+
+### Install the Fiji Script
+
+Copy:
+
+```text
+bubmask-fiji/src/main/fiji/BubMask.py
+```
+
+to your Fiji scripts folder:
+
+```text
+Fiji/scripts/Plugins/UNSW/BubMask.py
+```
+
+Create the `Plugins/UNSW` folders if they do not already exist. Restart Fiji
+after copying the script. BubMask should then appear under:
+
+```text
+Plugins > UNSW > BubMask
+```
+
+### Connect Fiji to the Downloaded Project Folder
+
+On first run, BubMask-Fiji checks for the downloaded project folder in this
+order:
+
+1. environment variable `BUBMASK_FIJI_PROJECT`;
+2. the saved Fiji preference from a previous run;
+3. the original local development path;
+4. a folder-selection prompt.
+
+For most public users, the easiest path is to run BubMask once and select the
+downloaded `bubmask-fiji` folder when prompted. The selection is saved in Fiji
+preferences for later runs.
+
+Advanced users can set an environment variable instead:
+
+```powershell
+setx BUBMASK_FIJI_PROJECT "C:\path\to\bubmask-fiji"
+```
+
+Restart Fiji after setting the environment variable.
+
+### Set Up the Python Environment
+
+Open PowerShell in the downloaded `bubmask-fiji` folder and create the local
+Python environment:
+
+```powershell
+py -3.10 -m venv .venv-bubmask
+.\.venv-bubmask\Scripts\python.exe -m pip install --upgrade pip setuptools wheel
+.\.venv-bubmask\Scripts\python.exe -m pip install -r src\main\python\requirements-bubmask-lock.txt
+```
+
+The current Mask R-CNN/TensorFlow stack was tested on Windows with Python 3.10.
+
+### Add Model Weights
+
+The public GitHub repository includes model metadata but not the large `.h5`
+Mask R-CNN weight files. Place the required weights in:
+
+```text
+bubmask-fiji/models/<model-package>/weights/mask_rcnn_bubble.h5
+```
+
+Without model weights, the Fiji command can open but Mask R-CNN inference cannot
+complete. Model weights should be distributed separately as release assets,
+institutional files, or a model package.
+
+---
+
+## 3. Starting BubMask
 
 1. Open Fiji.
 2. Open the image to analyse.
@@ -68,7 +159,7 @@ only retained after the user confirms the export choices at the end.
 
 ---
 
-## 3. Main Settings
+## 4. Main Settings
 
 ### Model Package
 
@@ -99,7 +190,7 @@ specific image-processing condition.
 
 ---
 
-## 4. Reviewing the Overlay
+## 5. Reviewing the Overlay
 
 After inference, BubMask-Fiji opens review outputs showing:
 
@@ -121,7 +212,7 @@ as a separate scientific class.
 
 ---
 
-## 5. Adding Missed Bubbles Manually
+## 6. Adding Missed Bubbles Manually
 
 If BubMask misses a bubble, add it using Fiji ROI tools:
 
@@ -141,7 +232,7 @@ bubbles table, then refresh the overlay again.
 
 ---
 
-## 6. Histogram and Data Analysis
+## 7. Histogram and Data Analysis
 
 The histogram tab allows the user to inspect the bubble equivalent diameter
 distribution before exporting results.
@@ -163,7 +254,7 @@ only when the masks, measurements, and histogram settings are ready for export.
 
 ---
 
-## 7. Exporting Results
+## 8. Exporting Results
 
 After `FINISH PROCESSING`, BubMask-Fiji asks which files to keep. The simplified
 scientific output package focuses on:
@@ -181,7 +272,7 @@ temporary files should be removed after the run.
 
 ---
 
-## 8. Scientific Interpretation
+## 9. Scientific Interpretation
 
 BubMask-Fiji should be reported as a segmentation-assisted measurement workflow,
 not as a fully autonomous measurement instrument. The user must inspect overlays
@@ -203,7 +294,7 @@ vent geometry, and replicate image when those metadata are available.
 
 ---
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 ### BubMask does not appear in Fiji
 
@@ -239,7 +330,7 @@ Manager, then press the manual-add button and refresh the mask overlay.
 
 ---
 
-## 10. Current Prototype Limits
+## 11. Current Prototype Limits
 
 - Model weights are not included in the public GitHub source release because
   they are large binary files.
@@ -253,7 +344,7 @@ Manager, then press the manual-add button and refresh the mask overlay.
 
 ---
 
-## 11. Where to Read More
+## 12. Where to Read More
 
 Primary technical report:
 

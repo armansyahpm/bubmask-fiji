@@ -9,6 +9,10 @@ Important Python requirement: this release requires **Python 3.10**. Python
 3.11/3.12 are not supported by the current TensorFlow/Keras Mask R-CNN
 dependency stack.
 
+It is fine if a PC already has Python 3.11, 3.12, or newer installed. Do not
+remove them. Install Python 3.10 side-by-side; BubMask-Fiji creates its own
+`.venv-bubmask` virtual environment using Python 3.10.
+
 Repository:
 
 ```text

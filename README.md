@@ -89,6 +89,9 @@ GitHub `v0.1.0` release, and verifies SHA256 checksums.
 
 Python requirement: this release requires **Python 3.10**. Python 3.11/3.12 are
 not supported by the current TensorFlow/Keras Mask R-CNN dependency stack.
+Newer Python versions can remain installed, but Python 3.10 must also be
+installed side-by-side because BubMask-Fiji creates `.venv-bubmask` from
+Python 3.10.
 
 Original BubMask weights are not distributed in this release.
 

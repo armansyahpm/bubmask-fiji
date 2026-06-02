@@ -104,6 +104,11 @@ Important Python requirement: this release requires **Python 3.10**. Python
 3.11/3.12 are not supported by the current TensorFlow/Keras Mask R-CNN
 dependency stack.
 
+A computer may already have Python 3.11, 3.12, or newer installed. That is
+acceptable, but Python 3.10 must also be installed side-by-side. BubMask-Fiji
+uses its own `.venv-bubmask` virtual environment created from Python 3.10, so
+newer system Python versions do not need to be removed.
+
 Original BubMask weights are not distributed by this public release.
 
 Restart Fiji after installation.
@@ -163,6 +168,8 @@ py -3.10 -m venv .venv-bubmask
 ```
 
 The current Mask R-CNN/TensorFlow stack requires Python 3.10 for this release.
+Newer Python versions may remain installed on the same PC, but the BubMask
+virtual environment must be created with Python 3.10.
 
 ### Add Model Weights Manually
 

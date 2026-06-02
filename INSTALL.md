@@ -5,6 +5,10 @@ Release target: `v0.1.0`
 This guide installs BubMask-Fiji from the public GitHub repository into a local
 Fiji/ImageJ installation. It is designed for Windows users.
 
+Important Python requirement: this release requires **Python 3.10**. Python
+3.11/3.12 are not supported by the current TensorFlow/Keras Mask R-CNN
+dependency stack.
+
 Repository:
 
 ```text
@@ -70,6 +74,8 @@ The installer will:
 5. download UNSW Round 2 and UNSW Round 3 model weights from GitHub Releases;
 6. verify SHA256 checksums;
 7. leave Original BubMask weights absent.
+
+If Python 3.10 is not available, the installer stops with a clear error message.
 
 Restart Fiji after the installer completes.
 

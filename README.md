@@ -87,6 +87,9 @@ The installer copies the Fiji script, sets `BUBMASK_FIJI_PROJECT`, creates the
 Python environment, downloads UNSW Round 2 and UNSW Round 3 weights from the
 GitHub `v0.1.0` release, and verifies SHA256 checksums.
 
+Python requirement: this release requires **Python 3.10**. Python 3.11/3.12 are
+not supported by the current TensorFlow/Keras Mask R-CNN dependency stack.
+
 Original BubMask weights are not distributed in this release.
 
 3. Restart Fiji.

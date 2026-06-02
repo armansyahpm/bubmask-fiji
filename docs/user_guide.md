@@ -100,6 +100,10 @@ The installer:
    release;
 6. verifies model SHA256 checksums.
 
+Important Python requirement: this release requires **Python 3.10**. Python
+3.11/3.12 are not supported by the current TensorFlow/Keras Mask R-CNN
+dependency stack.
+
 Original BubMask weights are not distributed by this public release.
 
 Restart Fiji after installation.
@@ -158,7 +162,7 @@ py -3.10 -m venv .venv-bubmask
 .\.venv-bubmask\Scripts\python.exe -m pip install -r src\main\python\requirements-bubmask-lock.txt
 ```
 
-The current Mask R-CNN/TensorFlow stack was tested on Windows with Python 3.10.
+The current Mask R-CNN/TensorFlow stack requires Python 3.10 for this release.
 
 ### Add Model Weights Manually
 

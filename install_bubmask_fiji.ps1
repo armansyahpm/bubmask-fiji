@@ -98,19 +98,50 @@ function Invoke-CommandChecked {
     }
 }
 
+function Get-Python310Command {
+    $pyLauncher = Get-Command py -ErrorAction SilentlyContinue
+    if ($null -ne $pyLauncher) {
+        & $pyLauncher.Source -3.10 --version | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            return @{
+                FilePath = $pyLauncher.Source
+                Prefix = @("-3.10")
+            }
+        }
+    }
+
+    $python = Get-Command python -ErrorAction SilentlyContinue
+    if ($null -ne $python) {
+        $versionOutput = & $python.Source -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"
+        if ($LASTEXITCODE -eq 0 -and "$versionOutput".Trim() -eq "3.10") {
+            return @{
+                FilePath = $python.Source
+                Prefix = @()
+            }
+        }
+    }
+
+    throw @"
+BubMask-Fiji requires Python 3.10 for the current TensorFlow/Keras Mask R-CNN stack.
+
+Install Python 3.10, then rerun this installer.
+Python 3.11/3.12 are not supported by this release.
+"@
+}
+
 function Ensure-PythonEnvironment {
     param([string]$Root)
     $venvPython = Join-Path $Root ".venv-bubmask\Scripts\python.exe"
     $requirements = Join-Path $Root "src\main\python\requirements-bubmask-lock.txt"
 
     if (-not (Test-Path -LiteralPath $venvPython)) {
-        $pyLauncher = Get-Command py -ErrorAction SilentlyContinue
-        if ($null -ne $pyLauncher) {
-            Invoke-CommandChecked -FilePath $pyLauncher.Source -Arguments @("-3.10", "-m", "venv", ".venv-bubmask")
-        } else {
-            $python = Get-Command python -ErrorAction Stop
-            Invoke-CommandChecked -FilePath $python.Source -Arguments @("-m", "venv", ".venv-bubmask")
-        }
+        $python310 = Get-Python310Command
+        Invoke-CommandChecked -FilePath $python310.FilePath -Arguments ($python310.Prefix + @("-m", "venv", ".venv-bubmask"))
+    }
+
+    $venvVersion = & $venvPython -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"
+    if ($LASTEXITCODE -ne 0 -or "$venvVersion".Trim() -ne "3.10") {
+        throw "Existing .venv-bubmask uses Python $venvVersion. Delete .venv-bubmask and rerun installer with Python 3.10."
     }
 
     Invoke-CommandChecked -FilePath $venvPython -Arguments @("-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel")

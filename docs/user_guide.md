@@ -1,6 +1,6 @@
 # BubMask-Fiji User Guide
 
-Version: research prototype, 2026-06-02
+Version: research prototype, 2026-06-03
 
 BubMask-Fiji is a Fiji/ImageJ workflow for measuring microbubble size
 distributions from microscope images. It combines Mask R-CNN bubble
@@ -9,6 +9,23 @@ measurement, histogram analysis, and exportable result files.
 
 This guide is written for mineral-engineering users who want to run the tool,
 inspect the masks, correct missed bubbles, and export traceable outputs.
+
+---
+
+## Table of Contents
+
+- [1. Before You Start](#1-before-you-start)
+- [2. Downloading from GitHub and Installing in Fiji](#2-downloading-from-github-and-installing-in-fiji)
+- [3. Starting BubMask](#3-starting-bubmask)
+- [4. Main Settings](#4-main-settings)
+- [5. Reviewing the Overlay](#5-reviewing-the-overlay)
+- [6. Adding Missed Bubbles Manually](#6-adding-missed-bubbles-manually)
+- [7. Histogram and Data Analysis](#7-histogram-and-data-analysis)
+- [8. Exporting Results](#8-exporting-results)
+- [9. Scientific Interpretation](#9-scientific-interpretation)
+- [10. Troubleshooting](#10-troubleshooting)
+- [11. Current Prototype Limits](#11-current-prototype-limits)
+- [12. Where to Read More](#12-where-to-read-more)
 
 ---
 
@@ -201,7 +218,10 @@ only retained after the user confirms the export choices at the end.
 You can also launch BubMask from Fiji Quick Search by typing `bub` and choosing
 the BubMask command.
 
-![Fiji Quick Search showing the BubMask command under Plugins > UNSW > BubMask.](figures/user_guide/fig_01_plugins_menu_bubmask.png)
+<p align="center">
+  <img src="figures/user_guide/fig_01_plugins_menu_bubmask.png" alt="Fiji Quick Search showing the BubMask command under Plugins > UNSW > BubMask." width="72%">
+  <br><em>Fiji Quick Search showing the BubMask command under Plugins &gt; UNSW &gt; BubMask.</em>
+</p>
 
 ---
 
@@ -211,7 +231,10 @@ The first BubMask window is intentionally compact. Routine users normally only
 need to confirm the detection method, model package, confidence threshold, and
 calibration.
 
-![BubMask Bubble Analyzer settings window showing model choice, confidence threshold, calibration, More options, NEXT/OK, and CANCEL.](figures/user_guide/fig_02_settings_basic_options.png)
+<p align="center">
+  <img src="figures/user_guide/fig_02_settings_basic_options.png" alt="BubMask Bubble Analyzer settings window showing model choice, confidence threshold, calibration, More options, NEXT/OK, and CANCEL." width="72%">
+  <br><em>BubMask Bubble Analyzer settings window showing model choice, confidence threshold, calibration, More options, NEXT/OK, and CANCEL.</em>
+</p>
 
 ### Model Package
 
@@ -280,7 +303,10 @@ The review stage uses two windows: the image window is where Fiji ROIs are drawn
 and the BubMask review window is where the user adds ROIs, refreshes overlays,
 checks tables, and moves to histogram/export.
 
-![BubMask overlay review image and Review and Analysis window with Manual Bubbles, Histogram, Bubble Table, Statistics, Run Summary, and Log tabs.](figures/user_guide/fig_03_running_and_overlay_review.png)
+<p align="center">
+  <img src="figures/user_guide/fig_03_running_and_overlay_review.png" alt="BubMask overlay review image and Review and Analysis window with Manual Bubbles, Histogram, Bubble Table, Statistics, Run Summary, and Log tabs." width="88%">
+  <br><em>BubMask overlay review image and Review and Analysis window with Manual Bubbles, Histogram, Bubble Table, Statistics, Run Summary, and Log tabs.</em>
+</p>
 
 The usual navigation is:
 
@@ -316,11 +342,14 @@ The screenshot below shows five manually added bubbles. The image overlay has
 been refreshed, and the measurement table has appended the new bubbles as normal
 `bubble` rows.
 
-![Manual bubble workflow showing added ROI bubbles, refreshed overlay, and appended bubble rows.](figures/user_guide/fig_04_manual_bubble_review.png)
+<p align="center">
+  <img src="figures/user_guide/fig_04_manual_bubble_review.png" alt="Manual bubble workflow showing added ROI bubbles, refreshed overlay, and appended bubble rows." width="84%">
+  <br><em>Manual bubble workflow showing added ROI bubbles, refreshed overlay, and appended bubble rows.</em>
+</p>
 
 Video demonstration:
 
-[Open the manual bubble workflow video.](figures/user_guide/manual_bubble_workflow.mp4)
+[Open the manual bubble workflow video.](https://github.com/armansyahpm/bubmask-fiji/raw/main/docs/figures/user_guide/manual_bubble_workflow.mp4)
 
 In the video workflow, the user draws ROIs in the Fiji overlay image, adds the
 current ROI or ROI Manager ROIs in the BubMask window, then refreshes the mask
@@ -348,35 +377,53 @@ When changing histogram settings, press `OK` to refresh the graph. Use `BACK`
 to return to manual bubble editing or model selection. Use `FINISH PROCESSING`
 only when the masks, measurements, and histogram settings are ready for export.
 
-![Histogram tab showing the diameter distribution preview and the right-hand settings panel.](figures/user_guide/fig_05_histogram_tab_overview.png)
+<p align="center">
+  <img src="figures/user_guide/fig_05_histogram_tab_overview.png" alt="Histogram tab showing the diameter distribution preview and the right-hand settings panel." width="84%">
+  <br><em>Histogram tab showing the diameter distribution preview and the right-hand settings panel.</em>
+</p>
 
-The histogram tab is interactive:
+### Reading and Updating the Histogram Page
 
-1. Choose what the y-axis represents using `Histogram by`.
-2. Set the number of bins.
-3. Enter x-axis limits if you want to zoom into a diameter range; leave limits
-   at `0.0` to let BubMask choose automatically.
-4. Toggle `PDF`, `CDF`, `D32 / Sauter mean`, `Mean diameter`, and `D23 marker`
-   as needed.
-5. Press `OK` to redraw the histogram with the new settings.
+The left side of the histogram tab shows the current diameter distribution.
+The right side contains the controls used to redraw the plot. Use the controls
+in this order:
 
-![Histogram by dropdown for choosing the plotted quantity.](figures/user_guide/fig_06_histogram_by_dropdown.png)
+1. Choose `Histogram by` to select `Count`, `Fraction`, or `Probability
+   density`. Use `Count` for a direct bubble-frequency plot. Use `Fraction` or
+   `Probability density` when comparing images with different bubble counts.
+2. Set `Number of bins`. More bins show finer structure but can make small
+   datasets noisy. Fewer bins give a smoother summary.
+3. Set x-axis minimum and maximum if you want to focus on a specific diameter
+   range. Leave both as `0.0` for automatic axis limits.
+4. Toggle `PDF` and `CDF` when you need probability-density or cumulative
+   distribution information in addition to the histogram bars.
+5. Toggle `D32 / Sauter mean`, `Mean diameter`, and `D23 marker` to display
+   reference diameter lines on the plot.
+6. Press `OK` to redraw the histogram. The graph does not update until `OK` is
+   pressed, so users can change several settings before refreshing.
 
-![Histogram y-axis options.](figures/user_guide/fig_07_histogram_y_axis_options.png)
-
-![Histogram settings after refresh, with updated graph controls.](figures/user_guide/fig_08_histogram_settings_refresh.png)
+Use `BACK` to return to manual bubble editing if a mask needs correction. Use
+`CHANGE MODEL` if the same image should be rerun with another model package.
+Use `FINISH PROCESSING` only after the masks, bubble table, and histogram
+settings are ready for export.
 
 The `Statistics` tab provides numerical summary metrics such as count, mean,
 median, percentiles, Sauter mean diameter, volume mean, minimum, and maximum.
 
-![Statistics tab showing count, mean, median, percentiles, D32/Sauter mean, volume mean, minimum, and maximum.](figures/user_guide/fig_09_statistics_tab.png)
+<p align="center">
+  <img src="figures/user_guide/fig_09_statistics_tab.png" alt="Statistics tab showing count, mean, median, percentiles, D32/Sauter mean, volume mean, minimum, and maximum." width="78%">
+  <br><em>Statistics tab showing count, mean, median, percentiles, D32/Sauter mean, volume mean, minimum, and maximum.</em>
+</p>
 
 The `Run Summary` tab records the image, run folder, model, preprocessing,
 calibration, worker status, and how many bubbles/manual bubbles were included.
 Local paths shown in the screenshots are examples; on another computer they
 will point to that user's Fiji and BubMask-Fiji folders.
 
-![Run Summary tab showing source image, model, calibration, detection count, and manual-bubble count.](figures/user_guide/fig_10_run_summary_tab.png)
+<p align="center">
+  <img src="figures/user_guide/fig_10_run_summary_tab.png" alt="Run Summary tab showing source image, model, calibration, detection count, and manual-bubble count." width="78%">
+  <br><em>Run Summary tab showing source image, model, calibration, detection count, and manual-bubble count.</em>
+</p>
 
 ---
 
@@ -399,11 +446,17 @@ temporary files should be removed after the run.
 After `FINISH PROCESSING`, BubMask asks whether to save the recommended output
 package, choose individual files, or save no files.
 
-![BubMask Result Files dialog showing recommended package, choose output files, and do not save files options.](figures/user_guide/fig_11_output_files_tab.png)
+<p align="center">
+  <img src="figures/user_guide/fig_11_output_files_tab.png" alt="BubMask Result Files dialog showing recommended package, choose output files, and do not save files options." width="74%">
+  <br><em>BubMask Result Files dialog showing recommended package, choose output files, and do not save files options.</em>
+</p>
 
 The final results window lists the retained files and their run-folder paths.
 
-![BubMask Results window showing retained output files and paths.](figures/user_guide/fig_12_finish_output_selection.png)
+<p align="center">
+  <img src="figures/user_guide/fig_12_finish_output_selection.png" alt="BubMask Results window showing retained output files and paths." width="74%">
+  <br><em>BubMask Results window showing retained output files and paths.</em>
+</p>
 
 ---
 
@@ -431,6 +484,54 @@ vent geometry, and replicate image when those metadata are available.
 
 ## 10. Troubleshooting
 
+This section covers the first setup issues observed during public-user testing.
+Most problems are caused by Python version mismatch, opening a different Fiji
+folder than the one used during installation, or restarting Fiji before Windows
+has picked up the project-folder setting.
+
+### I have Python 3.12. Can I still use BubMask-Fiji?
+
+Yes. Python 3.11, 3.12, or newer may remain installed on the same PC. This
+release still needs Python 3.10 installed side-by-side because the current
+TensorFlow/Keras Mask R-CNN stack is tied to Python 3.10.
+
+BubMask-Fiji does not use the system Python directly during analysis. It creates
+a private environment named:
+
+```text
+.venv-bubmask
+```
+
+That environment must be created from Python 3.10.
+
+### Installer says Python 3.10 is not found
+
+Check which Python launchers are available:
+
+```powershell
+py --list
+```
+
+If Python 3.10 is missing, install it with:
+
+```powershell
+winget install Python.Python.3.10
+```
+
+After installation, confirm:
+
+```powershell
+py -3.10 --version
+```
+
+Then rerun the BubMask-Fiji installer:
+
+```powershell
+.\install_bubmask_fiji.ps1 -FijiPath "C:\path\to\Fiji"
+```
+
+Do not delete Python 3.11/3.12 if other programs need them.
+
 ### BubMask does not appear in Fiji
 
 Check that `BubMask.py` is installed in:
@@ -439,13 +540,54 @@ Check that `BubMask.py` is installed in:
 Fiji/scripts/Plugins/UNSW/BubMask.py
 ```
 
-Restart Fiji after copying the script.
+Restart Fiji after copying the script or running the installer.
+
+If the computer has multiple Fiji folders, confirm that the script was installed
+into the same Fiji folder that is being opened. Installing into one Fiji folder
+and launching another is the most common reason the command does not appear.
+
+Use Fiji Quick Search and type:
+
+```text
+bub
+```
+
+The command should appear as:
+
+```text
+Plugins > UNSW > BubMask
+```
+
+### Fiji cannot find the BubMask project folder
+
+The project folder is the downloaded or cloned `bubmask-fiji` repository folder.
+The installer sets:
+
+```text
+BUBMASK_FIJI_PROJECT
+```
+
+On Windows, `setx` changes are visible only to new terminals and newly launched
+applications. If Fiji was already open, close it completely and open it again.
+
+If BubMask still asks for the project folder, choose the downloaded
+`bubmask-fiji` folder manually. Fiji saves this selection for later runs.
 
 ### BubMask runs but no files are produced
 
 Check the log tab and confirm that the Python worker environment is available.
 Also confirm that the selected model package has the required local weights
 file.
+
+For manual model setup, the required weight paths are:
+
+```text
+models/bubmask-maskrcnn-unsw-round2-v1/weights/mask_rcnn_bubble.h5
+models/bubmask-maskrcnn-unsw-round3-v1/weights/mask_rcnn_bubble.h5
+```
+
+The public release distributes only UNSW Round 2 and UNSW Round 3 weights.
+Original BubMask weights are not required for the public workflow.
 
 ### The overlay looks wrong
 
@@ -462,6 +604,21 @@ inside the histogram tab to refresh the graph.
 
 Make sure the ROI is active on the overlay review image or stored in Fiji's ROI
 Manager, then press the manual-add button and refresh the mask overlay.
+
+### Which model should I use?
+
+The current interface defaults to:
+
+```text
+UNSW Round 3 fine-tune (provisional)
+```
+
+Round 2 is also available. The held-out validation results in this project
+showed Round 2 was scientifically stronger on the available labelled validation
+and test images, while Round 3 remains the current default because it is the
+latest user-tested Fiji workflow. For scientific reporting, record which model
+was used and avoid claiming Round 3 is more accurate unless supported by new
+validation.
 
 ---
 

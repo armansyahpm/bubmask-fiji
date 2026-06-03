@@ -1,46 +1,112 @@
-# BubMask-Fiji
+﻿# BubMask-Fiji
 
-Publication-stage research and development report  
-Project: BubMask-Fiji, ML-driven microbubble size measurement for mineral engineering  
-Institutional context: UNSW School of Mining and Mineral Engineering  
-Current report date: 2026-06-01  
-Archived development journal: `docs/archive/bubmask-fiji_old_version.md`  
-Current operational Fiji script: `src/main/fiji/BubMask.py`  
-Current installed script hash: `97DDF43E3A2A2E884962C7099177504E6B56667F6606326910DFB70D3FEC3882`
+- Researcher/Author: Armansyah Putra Marpaung, School of Electrical Engineering and Telecommunications, University of New South Wales
+- Supervisor: Prof. Seher Ata, School of Minerals and Energy Resources Engineering, University of New South Wales
+- Archived development journal: `docs/archive/bubmask-fiji_old_version.md`
+- User guide available: `docs/user_guide.md`
+- Current operational Fiji script: `src/main/fiji/BubMask.py`
+- Current installed script hash: `97DDF43E3A2A2E884962C7099177504E6B56667F6606326910DFB70D3FEC3882`
 
 ---
 
 ## Abstract
 
-BubMask-Fiji is a Fiji/ImageJ-based research prototype for microbubble instance segmentation and bubble-size analysis in mineral-processing microscope images. The project adapts the BubMask Mask R-CNN workflow into a scientist-facing Fiji environment, adds calibration-aware measurement, produces traceable overlays and tabular outputs, and supports manual correction of missed bubbles using Fiji ROI tools. The development goal was not only to run a neural network, but to convert segmentation outputs into auditable mineral-engineering measurements: per-bubble equivalent diameter, histogram distributions, Sauter mean diameter, overlay images, instance-label masks, and exportable data packages.
+BubMask-Fiji is a prototype for analysing the size of bubbles and the particular way in which each of them looks in images of mineral-processing microscopes. It is built on the Fiji/ImageJ software package and uses a Mask R-CNN workflow to allow scientists to obtain calibrated measurements for size and location of bubbles in order to generate traceable overlays, tabular outputs, and support for manual intervention with failed/dropped bubbles using Fiji's ROI tools. The project is explicitly based on the original BubMask work by Kim and Park, "Deep learning-based automated and universal bubble detection and mask extraction in complex two-phase flows", and the public BubMask repository at `https://github.com/ywflow/BubMask` [1]. The purpose of BubMask-Fiji was therefore not to claim a new neural-network architecture, but to adapt, retrain, and operationalise the BubMask-style model for UNSW mineral-processing microscope images and to convert the resulting masks into auditable mineral-engineering measurements.
 
-The completed prototype provides a local Fiji menu entry, model selection between Original BubMask, UNSW Round 2, and UNSW Round 3 packages, a default calibration prompt of 183 px/mm, Mask R-CNN inference through a Python worker, manual bubble addition through a separate overlay review image, interactive histogram analysis, output-file retention control, and documented validation. Held-out COCO validation showed that the Round 2 package was substantially stronger than the Round 3 fine-tune on the available validation/test masks; therefore, Round 3 remains provisional and should not be claimed as scientifically more accurate without further independent validation.
+The prototype has been completed and includes several features that allow users to access different model packages from their local Fiji environment. In particular, the user has access to a menu entry for BubMask, with options for selecting the BubMask Original metadata option, the UNSW Round 2 model, or the UNSW Round 3 model package. The user is prompted for the default calibration value of 183 px/mm, can perform Mask R-CNN inference using a Python worker, manually add bubbles though a separate overlay image for validation purposes, perform interactive analysis on bubble sizes, control retention of output files, and document the validation process. A companion user guide is available at `docs/user_guide.md` to support installation, Fiji navigation, manual bubble correction, histogram analysis, and troubleshooting. The held-out COCO validation showed that Round 2 remained stronger than Round 3 on the available validation/test masks; therefore, Round 3 is treated as a provisional user-interface default for testing rather than as a proven accuracy improvement.
+
+---
+
+## Introduction
+
+Bubble size measurement is a recurring problem in mineral-processing experiments because gas dispersion, bubble-particle collision opportunity, and flotation hydrodynamics are all influenced by the distribution of bubble diameters in the pulp [25-27]. In laboratory imaging, however, the measurement task is not simply a matter of thresholding dark or bright objects. Microbubble images can contain uneven illumination, saturated highlights, blurred boundaries, dense bubble fields, field-of-view edge effects, and non-bubble particles [1,12,16,18,20]. A workflow that is useful to mineral scientists therefore has to combine automated detection with calibration, visual inspection, manual correction, and transparent data export [6,21,23,31].
+
+Traditional image-analysis workflows in Fiji/ImageJ provide a strong environment for opening microscopy files, calibrating pixel scale, drawing regions of interest, and exporting measurement tables [3-5]. Their limitation in this project is that hand-tuned thresholding and classical morphology are brittle when bubbles vary in contrast, focus, and overlap [1,12,17,20]. Deep learning provides a stronger route for instance-level segmentation, but a model alone is not enough for scientific use [1,2,6,8,16]. The model output must be converted into per-bubble measurements, audit-friendly overlays, histograms, and reproducible output folders that a non-programmer can operate [6,21,28-31].
+
+BubMask-Fiji was developed to bridge this gap. It packages a Mask R-CNN bubble-segmentation workflow behind a Fiji-accessible user interface, then connects the masks to calibrated equivalent diameter, Sauter mean diameter, per-bubble tables, histogram visualisation, and user-selected output retention. Its central scientific premise is conservative: neural-network masks are treated as candidate measurements that require review, not as automatically final truth. The completed research prototype is therefore best understood as a segmentation-assisted measurement workflow for mineral-engineering microscopy rather than a fully autonomous metrology instrument.
+
+## Literature Review
+
+### Fiji/ImageJ as the scientific user environment
+
+ImageJ and Fiji are central to this project because they are not merely image viewers; they are established scientific image-analysis environments with support for microscopy files, calibration, regions of interest, overlays, measurement tables, macros, and plugins [3-5]. For mineral-processing researchers, this existing ecosystem matters because the user does not necessarily want to operate a separate computer-vision application. The practical requirement is to open a microscope image, confirm calibration, inspect regions of interest, and export measurements in the same environment already used for scientific image work.
+
+The literature on ImageJ/Fiji and bioimage analysis therefore motivates the deployment strategy of BubMask-Fiji. The project follows the principle that a successful scientific machine-learning tool must integrate into the user's laboratory workflow, not only produce accurate masks in a standalone script [5-9,28-30]. DeepImageJ and BioImage.IO are particularly relevant precedents: they show that deep-learning models become usable to non-programmers only when model packaging, runtime dependencies, input/output definitions, examples, and documentation are treated as part of the scientific method [6,10]. BubMask-Fiji applies this lesson to a narrower mineral-engineering problem: bubble mask extraction and bubble-size measurement inside Fiji.
+
+### Original BubMask as the model foundation
+
+The most important technical foundation for this project is the original BubMask work by Kim and Park, "Deep learning-based automated and universal bubble detection and mask extraction in complex two-phase flows", together with the public GitHub repository `https://github.com/ywflow/BubMask` [1]. That work demonstrated that a Mask R-CNN-based approach can detect bubbles and extract masks across complex two-phase-flow images, building on the broader Mask R-CNN instance-segmentation architecture [1,2]. BubMask-Fiji builds directly from that contribution: the project does not claim to invent the original BubMask architecture. Instead, it adapts the BubMask model concept and codebase into a Fiji-accessible mineral-engineering workflow, then retrains/fine-tunes UNSW model packages so the detector is better matched to local microscope images, flow conditions, particles, highlights, and calibration requirements.
+
+This provenance is scientifically important. The original BubMask paper establishes the feasibility of deep-learning-based bubble mask extraction [1]. BubMask-Fiji asks a different but complementary research question: how can that bubble-segmentation capability be converted into a usable, auditable, calibrated measurement tool for mineral scientists? The answer requires model adaptation, Fiji integration, user correction, output traceability, and validation against held-out segmentation masks [6,11]. In this sense, the contribution is translational and workflow-oriented: it takes an existing bubble-segmentation model family and develops the engineering and scientific measurement layer needed for routine laboratory use.
+
+### From detection to measurement
+
+The wider bubble-imaging literature shows why this distinction matters. Many bubble-recognition studies focus on detection accuracy, segmentation quality, or reconstruction in challenging multiphase images [12-18]. Cui et al. developed deep-learning image processing for bubble detection, segmentation, and shape reconstruction in high gas-holdup sub-millimetre bubbly flows [12]. Ruan et al. applied machine learning to microbubble characterisation for a venturi bubble generator [14]. Xu et al. proposed BubSAM for segmentation and shape reconstruction using the Segment Anything model [15]. Other work addresses multi-scale bubble detection, model comparison for microbubble segmentation, bubble dynamics in boiling, froth velocity, dry-bubble imaging, and computer-vision modelling of multiphase flows [13,16-20].
+
+These studies support the conclusion that deep learning is a credible direction for difficult bubble images, but they also reveal a recurring gap: a segmentation result is not automatically a complete scientific measurement workflow [17,21]. Mineral-engineering bubble analysis requires calibrated diameter, Sauter mean diameter, histogram outputs, per-bubble records, visual overlays, manual review of missed/ambiguous bubbles, and reproducible export files [21-26]. BubMask-Fiji was built around that gap. Its measurement layer treats each mask as an object with area, equivalent diameter, centroid, status flags, calibration provenance, and exportable data.
+
+### Validation and scientific caution
+
+Mask R-CNN and COCO-style evaluation provide useful concepts for this project because each bubble is represented as an instance mask and model versions can be compared using IoU-based matching [2,11]. However, the literature and this project's validation results both show that segmentation metrics must be interpreted carefully. COCO agreement measures consistency with a particular annotation set; it does not by itself prove final scientific measurement accuracy across all future images, operators, or experimental conditions.
+
+The Round 3 training process illustrates this point. A larger human-corrected COCO segmentation dataset was assembled and used for fine-tuning, but the held-out comparison showed that the Round 2 model remained closer to the current COCO labels than the Round 3 Fiji model. This is not a failure of the BubMask-Fiji workflow. Rather, it demonstrates why model versioning, validation splits, particle-stratified reporting, and conservative scientific claims are necessary. BubMask-Fiji therefore contributes not only a usable interface, but also a reproducible framework for deciding whether a new bubble model should be trusted.
+
+### Contribution relative to the literature
+
+BubMask-Fiji's contribution is intentionally application-facing. It does not present a new neural-network architecture. It contributes a domain-specific bridge between bubble-segmentation research and mineral-engineering laboratory practice:
+
+- it adapts the original BubMask Mask R-CNN approach to UNSW microscope images [1,2];
+- it packages Round 2 and Round 3 UNSW model variants as versioned model packages;
+- it runs the workflow from Fiji through a Python worker rather than requiring users to run code manually;
+- it converts masks into calibrated per-bubble measurements and histograms [21,26];
+- it supports manual ROI correction before final export;
+- it records output provenance through overlays, tables, masks, JSON summaries, and logs;
+- it documents validation results and model limitations so the tool is not presented as more accurate than the evidence supports.
+
+This positions BubMask-Fiji as a scientific software contribution: it advances the usability, reproducibility, and measurement traceability of deep-learning bubble analysis for mineral scientists.
+
+## Research Development Trajectory
+
+The project developed iteratively from literature review and image-format analysis into a public Fiji research prototype.
+
+1. **Problem framing and image-format review.** Early work established that bubble-size measurement requires TIFF/OME-TIFF-aware scientific image handling, calibration metadata, and avoidance of lossy formats that can damage boundaries and highlights.
+2. **Fiji and DeepImageJ design review.** The project then studied how scientific users interact with Fiji plugins and how DeepImageJ/BioImage.IO lower the barrier for deep-learning models [3,6,10]. This shifted the goal from "run a neural network" to "build a scientist-facing workflow".
+3. **First Fiji-to-Python prototype.** The May 13 progress report demonstrated an end-to-end path from active Fiji image to Python worker, Mask R-CNN inference, JSON response, ResultsTable, and overlay.
+4. **Measurement and audit outputs.** By May 20, the prototype had moved from bounding boxes to instance-mask overlays, calibrated measurement policy, quality flags, histogram/export artifacts, and validation scaffolding.
+5. **Round 3 active-learning and training phase.** The project imported a 350-image COCO segmentation dataset with 34,258 bubble masks, cleaned the annotations, split train/validation/test data, and fine-tuned from the UNSW Round 2 model.
+6. **Held-out validation and scientific restraint.** Final validation showed that Round 2 remained stronger than Round 3 against the available COCO labels, leading to the current conservative model-status language.
+7. **Public release preparation.** The final stage focused on Fiji usability, manual bubble correction, histogram interaction, output selection, installer documentation, GitHub release packaging, and user-facing guides.
+
+This trajectory explains the final structure of the project: BubMask-Fiji is not only a trained model, but a complete research workflow spanning image intake, model adaptation, user interaction, measurement, validation, documentation, and public deployment.
 
 ---
 
 ## Table of Contents
 
-1. [Project Purpose](#1-project-purpose)
-2. [Research Objectives](#2-research-objectives)
-3. [Scientific and Engineering Requirements](#3-scientific-and-engineering-requirements)
-4. [System Architecture](#4-system-architecture)
-5. [Data and Model Packages](#5-data-and-model-packages)
-6. [Fiji User Workflow](#6-fiji-user-workflow)
-7. [Measurement and Histogram Methodology](#7-measurement-and-histogram-methodology)
-8. [Manual Bubble Review and Correction](#8-manual-bubble-review-and-correction)
-9. [Validation and Model Comparison](#9-validation-and-model-comparison)
-10. [Outputs, Traceability, and Reproducibility](#10-outputs-traceability-and-reproducibility)
-11. [Repository Structure](#11-repository-structure)
-12. [Limitations and Scientific Interpretation](#12-limitations-and-scientific-interpretation)
-13. [Publication Figures and Screenshot Checklist](#13-publication-figures-and-screenshot-checklist)
-14. [Future Work](#14-future-work)
-15. [References and Supporting Documents](#15-references-and-supporting-documents)
+1. [Introduction](#introduction)
+2. [Literature Review](#literature-review)
+3. [Research Development Trajectory](#research-development-trajectory)
+4. [Project Purpose](#1-project-purpose)
+5. [Research Objectives](#2-research-objectives)
+6. [Scientific and Engineering Requirements](#3-scientific-and-engineering-requirements)
+7. [System Architecture](#4-system-architecture)
+8. [Data and Model Packages](#5-data-and-model-packages)
+9. [Fiji User Workflow](#6-fiji-user-workflow)
+10. [Measurement and Histogram Methodology](#7-measurement-and-histogram-methodology)
+11. [Manual Bubble Review and Correction](#8-manual-bubble-review-and-correction)
+12. [Validation and Model Comparison](#9-validation-and-model-comparison)
+13. [Outputs, Traceability, and Reproducibility](#10-outputs-traceability-and-reproducibility)
+14. [Repository Structure](#11-repository-structure)
+15. [Limitations and Scientific Interpretation](#12-limitations-and-scientific-interpretation)
+16. [Publication Figures and Screenshot Checklist](#13-publication-figures-and-screenshot-checklist)
+17. [Future Work](#14-future-work)
+18. [References and Supporting Documents](#15-references-and-supporting-documents)
 
 ---
 
 ## 1. Project Purpose
 
-Microbubble sizing is important in mineral-processing experiments because bubble size distributions influence gas dispersion, flotation hydrodynamics, particle-bubble collision probability, and interpretation of operating conditions such as pressure, flow rate, and vent geometry. Manual bubble measurement is slow and inconsistent, while conventional thresholding can struggle with blurred bubbles, highlights, dense fields, uneven illumination, and non-bubble particles.
+Microbubble sizing is important in mineral-processing experiments because bubble size distributions influence gas dispersion, flotation hydrodynamics, particle-bubble collision probability, and interpretation of operating conditions such as pressure, flow rate, and vent geometry [25-27]. Manual bubble measurement is slow and inconsistent, while conventional thresholding can struggle with blurred bubbles, highlights, dense fields, uneven illumination, and non-bubble particles [1,12,17,20,21,23].
 
 BubMask-Fiji was developed to provide a practical bridge between deep-learning segmentation and laboratory measurement. The intended user is a mineral scientist, not a machine-learning engineer. The interface therefore has to hide most runtime complexity while preserving enough metadata, outputs, and warnings for scientific audit.
 
@@ -62,6 +128,8 @@ The completed research prototype pursued four linked objectives.
 2. Convert segmentation masks into scientifically meaningful microbubble measurements, including equivalent diameter and histogram outputs.
 3. Preserve traceability through request/response JSON, overlay images, instance-label masks, logs, model metadata, and user-selected output packages.
 4. Support manual scientific review, because model output alone is not sufficient for publication-grade bubble-size analysis.
+
+The research goals evolved during the project. The initial goal was to connect an existing deep-learning bubble detector to Fiji; the final goal became broader: to produce a reproducible scientific measurement workflow that starts from a microscope image, adapts the original BubMask modelling approach to UNSW images, permits human correction, exports calibrated bubble-size statistics, and records enough provenance for later audit or publication.
 
 The operational milestone is complete as of 2026-06-01. The live local Fiji entry is:
 
@@ -134,6 +202,12 @@ The prototype was required to remain practical on the current Windows/Fiji devel
 ---
 
 ## 4. System Architecture
+
+The overall project can be understood as a workflow architecture rather than as a single model script. The most important components are the Fiji user interface, the Python worker, the model package, the mask-measurement layer, the manual review/histogram layer, and the output/validation layer.
+
+![BubMask-FIJI Architecture](figures/architecture/bubmask_fiji_workflow_architecture.svg)
+
+Figure 1. BubMask-FIJI Architecture. The diagram shows the key project components that convert a microscope image into reviewed, calibrated bubble-size measurements: Fiji input/settings, Python inference, model packages, mask measurement, manual review with histogram analysis, and output/validation artifacts.
 
 ### 4.1 High-Level Runtime Flow
 
@@ -503,8 +577,9 @@ Scientifically, the safest claim is that BubMask-Fiji provides a traceable workf
 
 ## 13. Publication Figures and Screenshot Checklist
 
-The validation figures already available are:
+The architecture and validation figures already available are:
 
+- `docs/figures/architecture/bubmask_fiji_workflow_architecture.svg`
 - `docs/figures/round3_validation/overall_f1_round2_vs_round3.png`
 - `docs/figures/round3_validation/condition_f1_iou50.png`
 - `docs/figures/round3_validation/iou50_error_composition.png`
@@ -542,16 +617,15 @@ fig_ui_07_output_folder_package.png
 
 ## 14. Future Work
 
-Production hardening should focus on:
+The next stage of BubMask-Fiji should focus on production hardening. The current Fiji/Jython script is suitable for rapid research iteration, but a public tool for non-programmer mineral scientists would be stronger as a polished Java/SciJava plugin or Fiji update-site package. This would allow the workflow to appear as a conventional Fiji command, reduce manual file-copy steps, and make installation less dependent on the user understanding Python environments, model-weight paths, and local project-folder configuration.
 
-- packaging the workflow as a polished Java/SciJava plugin or Fiji update-site package;
-- improving installation for non-programmers;
-- deciding whether Round 2 or a future retrained model should be the default production model;
-- collecting independent fully human-corrected validation masks;
-- quantifying manual-review repeatability between users;
-- adding formal help/about/citation UI;
-- documenting model-card metadata for each released model package;
-- adding automated tests around JSON contracts, histogram export, calibration conversion, and output retention.
+The scientific priority is to strengthen model governance and validation. The current results show that Round 2 performed better than Round 3 on the available held-out COCO masks, while Round 3 remains the current user-interface default for testing. Future work should therefore decide whether Round 2, Round 3, or a new retrained model should become the production default only after additional independent validation. This should include newly collected, fully human-corrected masks, image sets from different experimental sessions, and explicit tests on with-particle and without-particle images.
+
+Manual review also needs formal evaluation. BubMask-Fiji deliberately includes Fiji ROI correction because segmentation outputs should be treated as candidate measurements rather than final truth. However, the reliability of manual correction should be quantified by repeatability studies between users. Such work would show whether two trained users produce similar corrected bubble counts, equivalent diameters, and Sauter mean diameters from the same image, and would clarify how much uncertainty the manual-review stage introduces into the final measurement.
+
+The public release should also improve user support and citation transparency. A production version should include formal help, about, and citation interfaces inside Fiji, together with model-card metadata for every released model package. Each model card should record training data, annotation source, validation split, default threshold, intended image domain, known failure modes, and whether the model is recommended for scientific reporting or only for comparison/testing.
+
+Finally, the software should be protected by automated tests around the most important scientific boundaries: JSON contracts between Fiji and Python, histogram export, calibration conversion, output-file retention, instance-mask export, and error handling when model weights or Python dependencies are missing. These tests would make the project safer to maintain as the interface moves from research prototype to open-source scientific software.
 
 ---
 
@@ -580,17 +654,66 @@ Evidence inventory for publication-stage traceability:
 | Runtime output examples | `results/` and `artifacts/results_archive_20260601/` | Demonstrates generated histogram/table/overlay files |
 | Active-learning materials | `validation/active_learning_round3/` | Documents Round 3 training-data development history |
 
-External references used during project planning and reporting. Final manuscript
-citations should be checked against publisher metadata before submission:
+### 15.1 References
 
-1. ImageJ/Fiji project: https://imagej.net/software/fiji/
-2. DeepImageJ website: https://deepimagej.github.io/
-3. DeepImageJ plugin repository: https://github.com/deepimagej/deepimagej-plugin
-4. BioImage Model Zoo specification: https://github.com/bioimage-io/spec-bioimage-io
-5. BubMask original repository: https://github.com/ywflow/BubMask
-6. Kim and Park, "Deep learning-based automated and universal bubble detection and mask extraction in complex two-phase flows", Scientific Reports, 2021.
-7. Cui et al., "A deep learning-based image processing method for bubble detection, segmentation, and shape reconstruction in high gas holdup sub-millimeter bubbly flows", Chemical Engineering Journal, 2022.
-8. Zhang et al., "Machine learning-aided characterization of microbubbles for venturi bubble generator", Chemical Engineering Journal, 2023.
-9. Xu et al., "BubSAM: Bubble segmentation and shape reconstruction based on Segment Anything Model of bubbly flow", AIChE Journal, 2024.
-10. OpenCV adaptive thresholding, denoising, and CLAHE documentation.
-11. scikit-image measure and region-properties documentation.
+[1] Kim, Y. and Park, J. (2021) "Deep learning-based automated and universal bubble detection and mask extraction in complex two-phase flows", Scientific Reports. Original BubMask code repository: `https://github.com/ywflow/BubMask`. Local PDF: `docs_reports/literature_review_weekly_updates/ML_for_Bubble_Size_Measurement_Papers/s41598-021-88334-0.pdf`.
+
+[2] He, K., Gkioxari, G., Dollar, P. and Girshick, R. (2017) "Mask R-CNN", IEEE International Conference on Computer Vision.
+
+[3] Schindelin, J. et al. (2012) "Fiji: an open-source platform for biological-image analysis", Nature Methods.
+
+[4] Schneider, C. A., Rasband, W. S. and Eliceiri, K. W. (2012) "NIH Image to ImageJ: 25 years of image analysis", Nature Methods.
+
+[5] Schroeder, A. B. et al. (2021) "The ImageJ ecosystem: Open-source software for image visualization, processing, and analysis", Protein Science.
+
+[6] Gomez-de-Mariscal, E. et al. (2021) "DeepImageJ: A user-friendly environment to run deep learning models in ImageJ", Nature Methods.
+
+[7] Berg, S. et al. (2019) "ilastik: interactive machine learning for (bio)image analysis", Nature Methods.
+
+[8] Moen, E. et al. (2019) "Deep learning for cellular image analysis", Nature Methods.
+
+[9] Jan, Z. et al. (2024) "From pixels to insights: Machine learning and deep learning for bioimage analysis", BioEssays.
+
+[10] BioImage.IO Consortium (n.d.) "BioImage Model Zoo specification", available at `https://github.com/bioimage-io/spec-bioimage-io`.
+
+[11] Lin, T.-Y. et al. (2014) "Microsoft COCO: Common Objects in Context", European Conference on Computer Vision.
+
+[12] Cui, Y. et al. (2022) "A deep learning-based image processing method for bubble detection, segmentation, and shape reconstruction in high gas holdup sub-millimeter bubbly flows", Chemical Engineering Journal.
+
+[13] Bai, L., Wang, X., Lin, S., Chai, Z. and Zhao, R. (2025) "Deep Learning-Based Multi-Scale Bubble Detection and Feature Analysis", Industrial & Engineering Chemistry Research.
+
+[14] Ruan, J. et al. (2023) "Machine learning-aided characterization of microbubbles for venturi bubble generator", Chemical Engineering Journal.
+
+[15] Xu, H. et al. (2024) "BubSAM: Bubble segmentation and shape reconstruction based on Segment Anything Model of bubbly flow", AIChE Journal.
+
+[16] Ren, Y. et al. (2026) "A review of deep learning-based bubble recognition methods", Flow Measurement and Instrumentation.
+
+[17] Cai, T. et al. (2025) "Balanced deep learning-based bubble segmentation: Model comparison, optimization, and application in microbubble detection", Flow Measurement and Instrumentation.
+
+[18] Malakhov, I. et al. (2023) "Deep learning segmentation to analyze bubble dynamics and heat transfer during boiling at various pressures", International Journal of Multiphase Flow.
+
+[19] Jahedsaravani, A. et al. (2023) "Measurement of bubble size and froth velocity using convolutional neural networks", Minerals Engineering.
+
+[20] Nizovtseva, I. et al. (2024) "Bubble Detection in Multiphase Flows Through Computer Vision and Deep Learning for Applied Modeling", Mathematics.
+
+[21] Mesa, D., Quintanilla, P. and Reyes, F. (2022) "Bubble Analyser - An open-source software for bubble size measurement using image analysis", Minerals Engineering.
+
+[22] Bubble Analyser project documentation (n.d.) "Bubble Analyser Manual".
+
+[23] Knupfer, L. and Heitkam, S. (2022) "A machine learning approach to determine bubble sizes in foam at a transparent wall", Measurement Science and Technology.
+
+[24] Srisaeng, S. et al. (2023) "Machine Learning Models for Micro-bubble Image Detection in Mosquito Sprayer Quality Control: Addressing Class and Scale Imbalance".
+
+[25] Wang, J., Forbes, G. and Forbes, E. (2022) "Bubble Size in Flotation", Applied Sciences.
+
+[26] "Industrial application of microbubble generation: the state-of-the-art and perspectives". Local PDF: `docs_reports/literature_review_weekly_updates/ML_for_Bubble_Size_Measurement_Papers/PAPER 1 MINERAL ENG.pdf`.
+
+[27] "An acoustic agglomeration method for separation/recovery of ultrafine particles by flotation". Local PDF: `docs_reports/literature_review_weekly_updates/ML_for_Bubble_Size_Measurement_Papers/PAPER 2 MINERAL ENG.pdf`.
+
+[28] Dominguez, C. et al. (2017) "IJ-OpenCV: Combining ImageJ and OpenCV for processing images in biomedicine", Computers in Biology and Medicine.
+
+[29] "Open-source deep-learning software for bioimage segmentation". Local PDF: `docs_reports/literature_review_weekly_updates/New_Lit_Review-ML-&_DL_for_bubble_size_measurement/open-source-deep-learning-software-for-bioimage-segmentation.pdf`.
+
+[30] Vargas, M. K. et al. (2021) Science of the Total Environment image-analysis/machine-learning reference. Local PDF: `docs_reports/literature_review_weekly_updates/Integrating_ML_to_FIJI_ImageJ/1-s2.0-S0048969720362574-main.pdf`. Full bibliographic metadata should be verified before submission.
+
+[31] OpenCV and scikit-image documentation (n.d.) image preprocessing, region properties, and measurement documentation.

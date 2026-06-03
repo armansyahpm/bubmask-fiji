@@ -105,6 +105,115 @@ Round 2 remains available for comparison and validation checks.
 
 ---
 
+## Troubleshooting and FAQ
+
+### Installer says Python 3.10 is not available
+
+This is the most common first-time setup issue. BubMask-Fiji requires Python
+3.10 for the current TensorFlow/Keras Mask R-CNN dependency stack. Python 3.11,
+3.12, or newer can stay installed, but Python 3.10 must also be installed
+side-by-side.
+
+Check installed Python versions:
+
+```powershell
+py --list
+```
+
+If Python 3.10 is missing, install it:
+
+```powershell
+winget install Python.Python.3.10
+```
+
+Then rerun the BubMask-Fiji installer from the repository folder:
+
+```powershell
+.\install_bubmask_fiji.ps1 -FijiPath "C:\path\to\Fiji"
+```
+
+Expected version check after installation:
+
+```powershell
+py -3.10 --version
+```
+
+### I already have Python 3.12. Should I remove it?
+
+No. Do not remove newer Python versions. BubMask-Fiji uses a private virtual
+environment named `.venv-bubmask`, created specifically from Python 3.10. Other
+Python versions on the same PC do not prevent BubMask-Fiji from working.
+
+### BubMask does not appear under Plugins > UNSW
+
+Check that the script was copied into the Fiji installation you are actually
+launching:
+
+```text
+Fiji/scripts/Plugins/UNSW/BubMask.py
+```
+
+If the computer has multiple Fiji folders, this is easy to mix up. For example,
+installing into a Fiji folder under `C:\Users\you\Downloads\...` and launching a
+different Fiji folder under `D:\Downloads\...` will make the command appear
+missing. Rerun the installer with the exact Fiji folder you intend to open, then
+restart Fiji.
+
+You can also use Fiji Quick Search and type:
+
+```text
+bub
+```
+
+### Fiji opens BubMask, but the project folder cannot be found
+
+The installer sets the user environment variable:
+
+```text
+BUBMASK_FIJI_PROJECT
+```
+
+On Windows, changes made with `setx` are visible only to new terminals and newly
+started applications. Close Fiji completely and open it again. If BubMask still
+asks for a folder, select the downloaded `bubmask-fiji` project folder manually.
+Fiji will save that selection for later runs.
+
+Advanced users can set the variable in the current PowerShell session before
+launching Fiji:
+
+```powershell
+$env:BUBMASK_FIJI_PROJECT = "C:\path\to\bubmask-fiji"
+Start-Process "C:\path\to\Fiji\fiji-windows-x64.exe"
+```
+
+### The model weights are missing
+
+The installer should download and verify the UNSW Round 2 and UNSW Round 3
+weights automatically. If installing manually, place the files exactly here:
+
+```text
+models/bubmask-maskrcnn-unsw-round2-v1/weights/mask_rcnn_bubble.h5
+models/bubmask-maskrcnn-unsw-round3-v1/weights/mask_rcnn_bubble.h5
+```
+
+The public release does not distribute Original BubMask weights. They are not
+required for the public UNSW Round 2/Round 3 workflow.
+
+### Which model should I choose?
+
+The current Fiji interface defaults to:
+
+```text
+UNSW Round 3 fine-tune (provisional)
+```
+
+Round 2 is also installed for comparison. The project validation report found
+Round 2 scientifically stronger on the available held-out labelled validation
+and test images, while Round 3 remains the current user-tested UI default. For
+scientific reporting, always record which model package was used.
+
+---
+
 ## Manual Installation
 
 If you do not want to use the installer:

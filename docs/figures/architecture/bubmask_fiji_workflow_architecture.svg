@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">BubMask-FIJI Architecture</title>
+  <desc id="desc">Simplified architecture diagram showing the key BubMask-Fiji components: Fiji user interface, Python worker, model package, mask measurement, manual review and histogram analysis, and output or validation artifacts.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 36px Arial, sans-serif; fill: #0f172a; }
+      .boxTitle { font: 700 22px Arial, sans-serif; fill: #0f172a; }
+      .boxText { font: 400 16px Arial, sans-serif; fill: #334155; }
+      .smallText { font: 400 14px Arial, sans-serif; fill: #475569; }
+      .note { font: 700 16px Arial, sans-serif; fill: #0f172a; }
+      .arrow { stroke: #334155; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .dash { stroke: #64748b; stroke-width: 2.2; fill: none; stroke-dasharray: 7 7; marker-end: url(#arrow); }
+      .foundation { fill: #eef2ff; stroke: #6366f1; stroke-width: 2; }
+      .fiji { fill: #ecfeff; stroke: #0891b2; stroke-width: 2; }
+      .worker { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2; }
+      .model { fill: #fefce8; stroke: #ca8a04; stroke-width: 2; }
+      .measure { fill: #fff7ed; stroke: #ea580c; stroke-width: 2; }
+      .review { fill: #fdf2f8; stroke: #db2777; stroke-width: 2; }
+      .output { fill: #f1f5f9; stroke: #475569; stroke-width: 2; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="780"/>
+  <text class="title" x="70" y="72">BubMask-FIJI Architecture</text>
+
+  <rect class="foundation" x="70" y="120" width="430" height="96" rx="18"/>
+  <text class="boxTitle" x="95" y="155">Model foundation</text>
+  <text class="boxText" x="95" y="184">Original BubMask / Mask R-CNN lineage [1,2]</text>
+  <text class="boxText" x="95" y="206">Adapted and fine-tuned for UNSW microscope images</text>
+
+  <rect class="fiji" x="70" y="300" width="300" height="140" rx="18"/>
+  <text class="boxTitle" x="95" y="336">1. Fiji user interface</text>
+  <text class="boxText" x="95" y="368">Open TIFF image</text>
+  <text class="boxText" x="95" y="392">Choose model and calibration</text>
+  <text class="boxText" x="95" y="416">Run Plugins &gt; UNSW &gt; BubMask</text>
+
+  <rect class="worker" x="455" y="300" width="260" height="140" rx="18"/>
+  <text class="boxTitle" x="480" y="336">2. Python worker</text>
+  <text class="boxText" x="480" y="368">Request JSON from Fiji</text>
+  <text class="boxText" x="480" y="392">Loads image and settings</text>
+  <text class="boxText" x="480" y="416">Runs inference pipeline</text>
+
+  <rect class="model" x="800" y="300" width="280" height="140" rx="18"/>
+  <text class="boxTitle" x="825" y="336">3. Model package</text>
+  <text class="boxText" x="825" y="368">UNSW Round 2 / Round 3</text>
+  <text class="boxText" x="825" y="392">Weights and model metadata</text>
+  <text class="boxText" x="825" y="416">Mask R-CNN bubble masks</text>
+
+  <rect class="measure" x="1145" y="300" width="270" height="140" rx="18"/>
+  <text class="boxTitle" x="1170" y="336">4. Measurement</text>
+  <text class="boxText" x="1170" y="368">Instance masks and boxes</text>
+  <text class="boxText" x="1170" y="392">Area, centroid, diameter</text>
+  <text class="boxText" x="1170" y="416">Calibrated statistics</text>
+
+  <rect class="review" x="250" y="540" width="380" height="135" rx="18"/>
+  <text class="boxTitle" x="275" y="575">5. Review and analysis</text>
+  <text class="boxText" x="275" y="607">Overlay review in Fiji</text>
+  <text class="boxText" x="275" y="631">Manual ROI bubble correction</text>
+  <text class="boxText" x="275" y="655">Interactive histogram, mean, D32</text>
+
+  <rect class="output" x="800" y="540" width="380" height="135" rx="18"/>
+  <text class="boxTitle" x="825" y="575">6. Outputs and validation</text>
+  <text class="boxText" x="825" y="607">CSV/Excel tables, overlays, masks, logs</text>
+  <text class="boxText" x="825" y="631">User-selected output retention</text>
+  <text class="boxText" x="825" y="655">Held-out COCO validation and reports</text>
+
+  <path class="arrow" d="M370 370 H455"/>
+  <path class="arrow" d="M715 370 H800"/>
+  <path class="arrow" d="M1080 370 H1145"/>
+  <path class="arrow" d="M1280 440 C1280 505 705 505 600 540"/>
+  <path class="arrow" d="M630 608 H800"/>
+  <path class="dash" d="M940 300 C940 250 220 250 220 300"/>
+  <path class="dash" d="M500 168 C650 168 790 235 870 300"/>
+
+  <rect class="panel" x="70" y="710" width="1280" height="44" rx="14"/>
+  <text class="note" x="95" y="738">Core logic:</text>
+  <text class="smallText" x="185" y="738">Fiji handles the scientist-facing workflow; Python handles model inference; BubMask-Fiji turns candidate masks into reviewed, calibrated, exportable measurements.</text>
+</svg>

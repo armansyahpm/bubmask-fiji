@@ -1,5 +1,8 @@
 # BubMask Fiji
 
+Researcher/Author: Armansyah Putra Marpaung, School of Electrical Engineering and Telecommunications, University of New South Wales
+Supervisor: Prof. Seher Ata, School of Minerals and Energy Resources Engineering, University of New South Wales
+
 This project is the dedicated Fiji/ImageJ plugin surface for BubMask, a Mask
 R-CNN based microbubble sizing workflow for the UNSW School of Mining and
 Mineral Engineering.
@@ -110,6 +113,58 @@ See the full installation guide:
 ```text
 INSTALL.md
 ```
+
+## Common first-time setup problems
+
+These are the most common issues seen during first-user testing.
+
+### I have Python 3.12. Can I still use BubMask-Fiji?
+
+Yes. Python 3.12 can remain installed, but this release also needs Python 3.10
+installed side-by-side. BubMask-Fiji creates its own `.venv-bubmask`
+environment from Python 3.10 because the current TensorFlow/Keras Mask R-CNN
+stack is not compatible with newer Python versions.
+
+If the installer says Python 3.10 is missing, install it and rerun the
+installer:
+
+```powershell
+winget install Python.Python.3.10
+.\install_bubmask_fiji.ps1 -FijiPath "C:\path\to\Fiji"
+```
+
+### BubMask does not appear in Fiji
+
+Confirm that you are opening the same Fiji installation that was passed to the
+installer. The installed script should exist at:
+
+```text
+Fiji/scripts/Plugins/UNSW/BubMask.py
+```
+
+If you have more than one Fiji folder, installing into one folder and launching
+another will make the command appear missing. Restart Fiji after installation,
+then search for `BubMask` with Fiji Quick Search or open
+`Plugins > UNSW > BubMask`.
+
+### Fiji cannot find the BubMask project folder
+
+The installer sets `BUBMASK_FIJI_PROJECT`, but Windows `setx` changes only apply
+to new terminals and newly launched applications. Close Fiji, open it again, and
+rerun BubMask. If prompted, manually choose the downloaded `bubmask-fiji`
+project folder.
+
+### Where do model weights go?
+
+The installer downloads the weights automatically. For manual setup, place the
+UNSW weights here:
+
+```text
+models/<model-package>/weights/mask_rcnn_bubble.h5
+```
+
+The public release distributes only UNSW Round 2 and UNSW Round 3 weights.
+Original BubMask weights are not needed for the public workflow.
 
 ## Suggested Fiji test
 
